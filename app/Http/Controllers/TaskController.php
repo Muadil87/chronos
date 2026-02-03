@@ -2,114 +2,139 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Task;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class TaskController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Display the dashboard with tasks.
      */
     public function index()
     {
-        $tasks = Task::where('user_id', Auth::id())->get();
+        $tasks = Auth::user()->tasks()->orderBy('created_at', 'desc')->get();
         return view('dashboard', compact('tasks'));
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Create a new task (Quick add from Dashboard).
      */
-    public function create()
+    public function store(Request $request)
     {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-   public function store(Request $request)
-    {
-        // 1. Validate: Make sure they actually typed something
-        $request->validate([
-            'title' => 'required|max:255',
+        $validated = $request->validate([
+            'title' => 'required|string|max:255',
         ]);
 
-        // 2. Create: Save the task to the database
-        Task::create([
-            'title' => $request->title,
-            'user_id' => Auth::id(), // Assign it to the CURRENT user (You!)
+        $request->user()->tasks()->create([
+            'title' => $validated['title'],
+            'is_completed' => false,
+            'duration_minutes' => 60, // Default duration
         ]);
 
-        // 3. Redirect: Go back to the dashboard so they see the new task
         return redirect()->route('dashboard');
     }
 
     /**
-     * Display the specified resource.
+     * Show the "Mission Briefing" page.
      */
     public function show(Task $task)
     {
-        // Security: Ensure only the owner can see this
         if ($task->user_id !== Auth::id()) {
             abort(403);
         }
-
-        // Return the new view (we will create this file next)
         return view('tasks.show', compact('task'));
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Update Task: Handles Dashboard toggles AND Briefing form saves.
      */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-public function update(Request $request, Task $task)
+    public function update(Request $request, Task $task)
     {
         if ($task->user_id !== Auth::id()) {
             abort(403);
         }
 
-        // Check if we are just toggling "Done/Undone" (from the dashboard)
-        if ($request->has('toggle_completion')) {
-             $task->update(['is_completed' => !$task->is_completed]);
-             return redirect()->back();
+        // Handle the Dashboard Checkbox Toggle
+        if ($request->has('is_completed_toggle')) {
+            $task->update([
+                'is_completed' => $request->boolean('is_completed')
+            ]);
+            return back();
         }
 
-        // Otherwise, we are updating the Details (Time Goal, Title, etc.)
-        $task->update($request->only(['title', 'description', 'time_goal']));
+        // Handle the Mission Briefing Save
+        $validated = $request->validate([
+            'title' => 'required|string|max:255',
+            'notes' => 'nullable|string',
+            'duration_minutes' => 'nullable|integer|min:1',
+            'is_completed' => 'nullable|boolean',
+        ]);
 
-        // Stay on the same page and show a success message
-        return redirect()->route('tasks.show', $task)->with('status', 'Goal updated!');
+        $task->update($validated);
+
+        return back()->with('status', 'Mission parameters updated successfully.');
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Show the focus/timer page.
      */
-public function destroy(Task $task)
+    public function focus(Task $task)
     {
-        // 1. Security Check: Make sure the user owns this task
+        if ($task->user_id !== Auth::id()) {
+            abort(403);
+        }
+        return view('tasks.focus', compact('task'));
+    }
+
+    /**
+     * Record completed focus time.
+     */
+    public function recordSession(Request $request, Task $task)
+    {
         if ($task->user_id !== Auth::id()) {
             abort(403);
         }
 
-        // 2. Delete it
+        $validated = $request->validate([
+            'minutes' => 'required|integer|min:1',
+        ]);
+
+        $task->increment('time_spent', $validated['minutes']);
+
+        return response()->json(['success' => true]);
+    }
+
+    /**
+     * Delete a task.
+     */
+    public function destroy(Task $task)
+    {
+        if ($task->user_id !== Auth::id()) {
+            abort(403);
+        }
+
         $task->delete();
 
-        // 3. Go back to the dashboard
         return redirect()->route('dashboard');
     }
-    public function focus(Task $task)
-{
-    if ($task->user_id !== Auth::id()) abort(403);
 
-    // Return the simple timer page (we will build this file in the next prompt)
-    return "Welcome to the Focus Room for: " . $task->title; 
-}
+    /**
+     * Stats logic.
+     */
+    public function stats()
+    {
+        $user = Auth::user();
+        $tasks = $user->tasks()->get();
+        $totalMinutes = $tasks->sum('time_spent') ?? 0;
+        
+        return view('stats', [
+            'tasks' => $tasks,
+            'totalMinutes' => $totalMinutes,
+            'hours' => intdiv($totalMinutes, 60),
+            'minutes' => $totalMinutes % 60,
+            'completedTasks' => $tasks->where('is_completed', true)->count(),
+            'totalTasks' => $tasks->count(),
+        ]);
+    }
 }

@@ -1,171 +1,94 @@
-<!DOCTYPE html>
-<html lang="en" class="dark">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chronos - Mission Briefing</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
-        body { font-family: 'Inter', sans-serif; }
-        .font-mono { font-family: 'JetBrains Mono', monospace; }
-        
-        /* Smooth fade for the selection ring */
-        .ring-transition { transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); }
-    </style>
-</head>
-<body class="bg-black text-white selection:bg-indigo-500/30">
-    <div class="min-h-screen bg-black">
-        
-        <header class="border-b border-gray-900 bg-black/50 backdrop-blur-md sticky top-0 z-10">
-            <div class="max-w-3xl mx-auto px-6 py-4 flex items-center justify-between">
-                <a href="{{ route('dashboard') }}" class="flex items-center gap-2 text-gray-500 hover:text-white transition-colors group">
-                    <svg class="w-4 h-4 text-gray-600 group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
-                    <span class="text-sm font-medium">Dashboard</span>
-                </a>
-                <span class="text-xs font-mono text-gray-700 uppercase tracking-widest">Mission Control</span>
-            </div>
-        </header>
-
-        <main class="max-w-3xl mx-auto px-6 py-12">
-            
-            <div class="mb-12">
-                <h1 class="text-4xl font-bold tracking-tight mb-4 text-white">{{ $task->title }}</h1>
-                <p class="text-gray-400 text-lg leading-relaxed">{{ $task->description }}</p>
-            </div>
-
-            <form action="{{ route('tasks.update', $task) }}" method="POST">
-                @csrf
-                @method('PATCH')
-                
-                <div class="bg-gray-900 border border-gray-800 rounded-xl p-6 mb-8">
-                    
-                    <div class="flex justify-between items-center mb-6">
-                        <h3 class="text-gray-400 text-xs font-semibold uppercase tracking-widest">Session Structure</h3>
-                        <span class="text-xs font-mono text-indigo-400 bg-indigo-500/10 border border-indigo-500/20 px-2 py-1 rounded">
-                            20m Focus • 5m Rest
-                        </span>
-                    </div>
-
-                    <div class="grid grid-cols-3 gap-4 mb-8">
-                        <button type="button" onclick="setCycles(1)" id="btn-1h" class="relative group p-4 rounded-xl border border-gray-800 bg-black hover:border-indigo-500/50 hover:bg-gray-800 transition-all text-left ring-transition">
-                            <div class="text-2xl font-bold text-white mb-1">1 hr</div>
-                            <div class="text-xs text-gray-500 group-hover:text-gray-400">3 Cycles</div>
-                            <div class="absolute inset-0 border-2 border-indigo-500 rounded-xl opacity-0 scale-95 ring-transition pointer-events-none" id="ring-1h"></div>
-                        </button>
-
-                        <button type="button" onclick="setCycles(2)" id="btn-2h" class="relative group p-4 rounded-xl border border-gray-800 bg-black hover:border-indigo-500/50 hover:bg-gray-800 transition-all text-left ring-transition">
-                            <div class="text-2xl font-bold text-white mb-1">2 hrs</div>
-                            <div class="text-xs text-gray-500 group-hover:text-gray-400">6 Cycles</div>
-                            <div class="absolute inset-0 border-2 border-indigo-500 rounded-xl opacity-0 scale-95 ring-transition pointer-events-none" id="ring-2h"></div>
-                        </button>
-
-                        <button type="button" onclick="setCycles(3)" id="btn-3h" class="relative group p-4 rounded-xl border border-gray-800 bg-black hover:border-indigo-500/50 hover:bg-gray-800 transition-all text-left ring-transition">
-                            <div class="text-2xl font-bold text-white mb-1">3 hrs</div>
-                            <div class="text-xs text-gray-500 group-hover:text-gray-400">9 Cycles</div>
-                            <div class="absolute inset-0 border-2 border-indigo-500 rounded-xl opacity-0 scale-95 ring-transition pointer-events-none" id="ring-3h"></div>
-                        </button>
-                    </div>
-
-                    <div class="mb-2 flex justify-between text-[10px] text-gray-500 font-mono tracking-wider">
-                        <span>START</span>
-                        <span id="total-time-display">75 MIN TOTAL</span>
-                    </div>
-                    
-                    <div class="flex h-2 w-full rounded-full overflow-hidden bg-gray-800/50 mb-4" id="timeline-bar">
-                        </div>
-                    
-                    <div class="flex gap-6 mt-4 text-xs text-gray-500 border-t border-gray-800 pt-4">
-                        <div class="flex items-center"><div class="w-1.5 h-1.5 rounded-full bg-indigo-500 mr-2"></div> Focus (20m)</div>
-                        <div class="flex items-center"><div class="w-1.5 h-1.5 rounded-full bg-gray-600 mr-2"></div> Rest (5m)</div>
-                    </div>
-
-                    <input type="hidden" name="time_goal" id="real-time-input" value="75"> 
-                </div>
-
-                <div class="bg-gray-900 border border-gray-800 rounded-xl p-1 mb-8">
-                    <textarea name="description" rows="4" placeholder="What’s on your mind? Let’s get it done."
-                        class="w-full bg-transparent border-0 rounded-lg px-4 py-3 text-gray-300 placeholder-gray-600 focus:ring-0 focus:outline-none resize-none leading-relaxed">{{ $task->description }}</textarea>
-                </div>
-
-                <div class="flex gap-4 items-center">
-                    <a href="{{ route('tasks.focus', $task) }}" class="flex-1 bg-white text-black font-semibold py-4 px-6 rounded-xl hover:bg-gray-200 transition-all flex items-center justify-center gap-2 group shadow-[0_0_20px_rgba(255,255,255,0.1)] hover:shadow-[0_0_25px_rgba(255,255,255,0.2)]">
-                        <svg class="w-5 h-5 group-hover:scale-110 transition-transform" fill="currentColor" viewBox="0 0 20 20"><path d="M6.3 2.841A1.5 1.5 0 004 4.11V15.89a1.5 1.5 0 002.3 1.269l9.344-5.89a1.5 1.5 0 000-2.538L6.3 2.84z"></path></svg>
-                        Start Focus Session
-                    </a>
-
-                    <button type="submit" class="px-6 py-4 rounded-xl border border-gray-800 text-gray-400 hover:text-white hover:bg-gray-800 hover:border-gray-700 transition-all font-medium">
-                        Save Notes
-                    </button>
-                </div>
-            </form>
-        </main>
+<x-app-layout>
+    <div class="fixed top-0 left-0 w-full h-full overflow-hidden -z-10 pointer-events-none">
+        <div class="absolute bottom-0 right-0 w-[600px] h-[600px] bg-indigo-900/10 rounded-full blur-[100px] opacity-40"></div>
     </div>
 
-    <script>
-        function setCycles(hours) {
-            // Logic: 1 hour = 3 cycles (20m work + 5m break = 25m block)
-            const cyclesPerHour = 3;
-            const totalCycles = hours * cyclesPerHour;
-            const totalMinutes = totalCycles * 25;
-
-            // Update Hidden Input for Laravel
-            document.getElementById('real-time-input').value = totalMinutes;
-            document.getElementById('total-time-display').innerText = totalMinutes + " MIN TOTAL";
-
-            // Update Visual Selection State
-            // 1. Reset all buttons
-            document.querySelectorAll('[id^="btn-"]').forEach(btn => {
-                btn.classList.remove('bg-gray-800', 'border-gray-600');
-                btn.classList.add('bg-black', 'border-gray-800');
-            });
-            document.querySelectorAll('[id^="ring-"]').forEach(ring => {
-                ring.classList.add('opacity-0', 'scale-95');
-                ring.classList.remove('opacity-100', 'scale-100');
-            });
-
-            // 2. Activate clicked button
-            const activeBtn = document.getElementById(`btn-${hours}h`);
-            const activeRing = document.getElementById(`ring-${hours}h`);
+    <div class="py-12">
+        <div class="max-w-3xl mx-auto sm:px-6 lg:px-8">
             
-            if(activeBtn) {
-                activeBtn.classList.remove('bg-black', 'border-gray-800');
-                activeBtn.classList.add('bg-gray-800', 'border-gray-600');
-            }
-            if(activeRing) {
-                activeRing.classList.remove('opacity-0', 'scale-95');
-                activeRing.classList.add('opacity-100', 'scale-100');
-            }
-
-            // 3. Draw the Timeline
-            drawTimeline(totalCycles);
-        }
-
-        function drawTimeline(cycles) {
-            const container = document.getElementById('timeline-bar');
-            container.innerHTML = ''; // Clear
-
-            for (let i = 0; i < cycles; i++) {
-                // Focus Segment (Indigo)
-                const focusSeg = document.createElement('div');
-                focusSeg.className = 'bg-indigo-500 h-full border-r border-black/50 last:border-0';
-                focusSeg.style.width = '80%'; // Visual approximation of 20m vs 5m
+            <div class="mb-6 flex items-center justify-between">
+                <a href="{{ route('dashboard') }}" class="text-gray-500 hover:text-white flex items-center gap-2 transition-colors text-sm">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+                    Back to Command Center
+                </a>
                 
-                // Break Segment (Gray)
-                const breakSeg = document.createElement('div');
-                breakSeg.className = 'bg-gray-700 h-full border-r border-black/50 last:border-0';
-                breakSeg.style.width = '20%';
+                @if (session('status'))
+                    <span x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 3000)" class="text-emerald-400 text-xs font-mono bg-emerald-900/20 px-3 py-1 rounded-full border border-emerald-900/50">
+                        {{ session('status') }}
+                    </span>
+                @endif
+            </div>
 
-                container.appendChild(focusSeg);
+            <div class="bg-gray-900/40 backdrop-blur-xl border border-gray-800 rounded-2xl p-8 shadow-2xl relative overflow-hidden">
                 
-                // Add break segment unless it's the very last cycle (optional preference, 
-                // but usually you want a break at the end of a cycle)
-                container.appendChild(breakSeg);
-            }
-        }
+                <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-indigo-500 to-transparent opacity-50"></div>
 
-        // Initialize Default (1 Hour)
-        setCycles(1);
-    </script>
-</body>
-</html>
+                <div class="mb-8">
+                    <h1 class="text-2xl font-bold text-white tracking-tight">Mission Briefing</h1>
+                    <p class="text-gray-500 text-sm mt-1">Define parameters and objectives for this protocol.</p>
+                </div>
+
+                <form method="POST" action="{{ route('tasks.update', $task) }}" class="space-y-6">
+                    @csrf
+                    @method('PATCH')
+
+                    <div>
+                        <label class="block text-[10px] font-mono text-gray-500 uppercase tracking-widest mb-2">Protocol Name</label>
+                        <input type="text" name="title" value="{{ old('title', $task->title) }}" 
+                            class="w-full bg-black/50 border border-gray-700 rounded-xl px-4 py-3 text-white focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-none transition-all placeholder-gray-700 font-medium">
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-[10px] font-mono text-gray-500 uppercase tracking-widest mb-2">
+                                Time Allocation (Minutes)
+                            </label>
+                            <div class="relative">
+                                <input type="number" name="duration_minutes" value="{{ old('duration_minutes', $task->duration_minutes) }}" 
+                                    class="w-full bg-black/50 border border-gray-700 rounded-xl px-4 py-3 text-white focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-none transition-all placeholder-gray-700 font-mono"
+                                    placeholder="60">
+                                <div class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-600 text-xs pointer-events-none">MIN</div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-[10px] font-mono text-gray-500 uppercase tracking-widest mb-2">Current Status</label>
+                            <div class="flex items-center justify-between bg-black/30 border border-gray-800 rounded-xl px-4 py-3">
+                                <span class="text-sm {{ $task->is_completed ? 'text-emerald-400' : 'text-amber-400' }}">
+                                    {{ $task->is_completed ? 'COMPLETED' : 'PENDING' }}
+                                </span>
+                                <div class="w-2 h-2 rounded-full {{ $task->is_completed ? 'bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.5)]' : 'bg-amber-500 shadow-[0_0_10px_rgba(245,158,11,0.5)]' }}"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-[10px] font-mono text-gray-500 uppercase tracking-widest mb-2">Mission Intelligence / Notes</label>
+                        <textarea name="notes" rows="6" 
+                            class="w-full bg-black/50 border border-gray-700 rounded-xl px-4 py-3 text-white focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-none transition-all placeholder-gray-700 leading-relaxed resize-none"
+                            placeholder="Enter detailed objectives, resources, or sub-tasks here...">{{ old('notes', $task->notes) }}</textarea>
+                    </div>
+
+                    <div class="pt-4 flex items-center justify-between border-t border-gray-800 mt-6">
+                        
+                        <button type="button" onclick="document.getElementById('delete-form').submit()" class="text-xs text-red-500 hover:text-red-400 transition-colors flex items-center gap-2">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                            Terminate Protocol
+                        </button>
+
+                        <button type="submit" class="bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-semibold px-6 py-2.5 rounded-lg transition-all shadow-lg shadow-indigo-500/20 flex items-center gap-2">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"></path></svg>
+                            Save Updates
+                        </button>
+                    </div>
+                </form>
+
+                <form id="delete-form" action="{{ route('tasks.destroy', $task) }}" method="POST" class="hidden">
+                    @csrf
+                    @method('DELETE')
+                </form>
+
+            </div>
+        </div>
+    </div>
+</x-app-layout>
