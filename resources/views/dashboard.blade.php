@@ -3,10 +3,10 @@
         <div class="absolute top-1/4 left-1/2 -translate-x-1/2 w-[800px] h-[800px] bg-indigo-900/20 rounded-full blur-[120px] opacity-50"></div>
     </div>
 
-    <div class="py-12 relative" x-data="{ commandCenterVisible: true }" @profile-toggle="commandCenterVisible = !commandCenterVisible">
+    <div class="py-12 relative" x-data="{ commandCenterVisible: true, searchQuery: '' }">
         <div class="max-w-4xl mx-auto sm:px-6 lg:px-8">
             
-            <div class="mb-10 text-center sm:text-left flex flex-col sm:flex-row items-center justify-between gap-6" x-show="commandCenterVisible" x-transition>
+            <div class="mb-10 text-center sm:text-left flex flex-col sm:flex-row items-center justify-between gap-6" x-show="commandCenterVisible && !$store.navbar.focusMode" x-transition>
                 <div>
                     <h2 class="font-bold text-3xl text-white tracking-tight">
                         Command Center
@@ -28,7 +28,12 @@
                 </div>
             </div>
 
-            <div class="bg-gray-900/40 backdrop-blur-xl overflow-hidden shadow-2xl sm:rounded-2xl border border-gray-800" x-show="commandCenterVisible" x-transition>
+            <!-- SEARCH BAR -->
+            <div class="mb-10 bg-gray-900/40 backdrop-blur-xl border border-gray-800 rounded-2xl p-6 shadow-2xl" x-show="$store.navbar.searchOpen" x-transition>
+                <input type="text" x-model="$store.navbar.searchQuery" placeholder="Search tasks..." class="w-full bg-black/50 border border-gray-700 rounded-lg px-4 py-2 text-white placeholder-gray-600 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-none transition-all">
+            </div>
+
+            <div class="bg-gray-900/40 backdrop-blur-xl overflow-hidden shadow-2xl sm:rounded-2xl border border-gray-800" x-show="commandCenterVisible && !$store.navbar.focusMode" x-transition>
                 <div class="p-8">
                     
                     <form action="{{ route('tasks.store') }}" method="POST" class="mb-8 relative group">
@@ -47,12 +52,13 @@
 
                     <div class="space-y-3">
                         @foreach (Auth::user()->tasks as $task)
-                            <div class="group flex items-center justify-between p-4 bg-gray-800/30 hover:bg-gray-800/60 border border-gray-700/50 hover:border-indigo-500/30 rounded-xl transition-all duration-200">
+                            <div class="group flex items-center justify-between p-4 bg-gray-800/30 hover:bg-gray-800/60 border border-gray-700/50 hover:border-indigo-500/30 rounded-xl transition-all duration-200" x-show="!$store.navbar.searchQuery || '{{ strtolower($task->title) }}'.includes($store.navbar.searchQuery.toLowerCase())">
                                 
                                 <div class="flex items-center gap-4 flex-1">
                                     <form method="POST" action="{{ route('tasks.update', $task) }}">
                                         @csrf
                                         @method('PATCH')
+                                        <input type="hidden" name="is_completed_toggle" value="1">
                                         <input type="hidden" name="is_completed" value="{{ $task->is_completed ? 0 : 1 }}">
                                         <button type="submit" class="relative flex items-center justify-center w-6 h-6 rounded-md border-2 {{ $task->is_completed ? 'bg-emerald-500 border-emerald-500' : 'border-gray-600 hover:border-indigo-400' }} transition-colors">
                                             @if($task->is_completed)
@@ -70,7 +76,7 @@
                                             <a href="{{ route('tasks.show', $task) }}" class="text-gray-200 hover:text-indigo-400 font-medium transition-all cursor-pointer">
                                                 {{ $task->title }}
                                             </a>
-                                            <span class="text-[10px] text-gray-600 font-mono uppercase tracking-tighter">Goal: {{ $task->duration_minutes ?? 60 }} MIN</span>
+                                            <span class="text-[10px] text-gray-600 font-mono uppercase tracking-tighter">Goal: {{ $task->time_goal ?? 25 }} MIN</span>
                                         @endif
                                     </div>
                                 </div>
@@ -105,6 +111,49 @@
                         @endif
                     </div>
 
+                </div>
+            </div>
+
+            <!-- FOCUS MODE VIEW -->
+            <div x-show="$store.navbar.focusMode" x-transition class="min-h-[80vh] flex flex-col">
+                <div class="text-center mb-8">
+                    <h2 class="text-3xl font-bold text-white mb-2">Focus Mode</h2>
+                    <p class="text-gray-400">Your active tasks. Stay focused.</p>
+                </div>
+
+                <div class="space-y-4 flex-1">
+                    @foreach (Auth::user()->tasks->where('is_completed', false) as $task)
+                        <div class="group flex items-center justify-between p-6 bg-gray-800/50 hover:bg-gray-800/80 border border-gray-700/50 hover:border-indigo-500/50 rounded-xl transition-all duration-200">
+                            
+                            <div class="flex items-center gap-4 flex-1">
+                                <form method="POST" action="{{ route('tasks.update', $task) }}">
+                                    @csrf
+                                    @method('PATCH')
+                                    <input type="hidden" name="is_completed_toggle" value="1">
+                                    <input type="hidden" name="is_completed" value="1">
+                                    <button type="submit" class="relative flex items-center justify-center w-6 h-6 rounded-md border-2 border-gray-600 hover:border-indigo-400 transition-colors">
+                                    </button>
+                                </form>
+
+                                <div class="flex flex-col flex-1">
+                                    <a href="{{ route('tasks.show', $task) }}" class="text-lg text-gray-200 hover:text-indigo-400 font-medium transition-all cursor-pointer">
+                                        {{ $task->title }}
+                                    </a>
+                                    <span class="text-sm text-gray-600 font-mono">Goal: {{ $task->time_goal ?? 25 }} MIN</span>
+                                </div>
+                            </div>
+
+                            <a href="{{ route('tasks.focus', $task) }}" class="px-6 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-lg transition-colors">
+                                START FOCUS
+                            </a>
+                        </div>
+                    @endforeach
+
+                    @if(Auth::user()->tasks->where('is_completed', false)->isEmpty())
+                        <div class="text-center py-16">
+                            <p class="text-gray-500 text-lg">All tasks completed! 🎉</p>
+                        </div>
+                    @endif
                 </div>
             </div>
         </div>

@@ -15,6 +15,7 @@ protected $fillable = [
     'duration_minutes',
     'is_completed',
     'time_spent',
+    'time_goal',
     'user_id'
 ];
 

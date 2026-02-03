@@ -32,10 +32,15 @@
         <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
         <script>
             document.addEventListener('alpine:init', () => {
-                Alpine.store('commandCenter', {
-                    visible: true,
-                    toggle() {
-                        this.visible = !this.visible;
+                Alpine.store('navbar', {
+                    searchOpen: false,
+                    focusMode: false,
+                    searchQuery: '',
+                    toggleSearch() {
+                        this.searchOpen = !this.searchOpen;
+                    },
+                    toggleFocusMode() {
+                        this.focusMode = !this.focusMode;
                     }
                 });
             });

@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chronos - Settings</title>
+    <link rel="icon" href="/logo.png" type="image/png">
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;700&display=swap');
@@ -14,10 +15,13 @@
 <body class="bg-black text-white min-h-screen p-8">
 
     <header class="max-w-xl mx-auto flex justify-between items-center mb-12">
-        <a href="{{ route('dashboard') }}" class="flex items-center gap-2 text-gray-500 hover:text-white transition-colors group">
-            <svg class="w-5 h-5 group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
-            <span class="text-sm font-mono uppercase tracking-widest">Back</span>
-        </a>
+        <div class="flex items-center gap-3">
+            <img src="/logo.png" alt="Chronos Logo" class="h-10 w-auto object-contain">
+            <a href="{{ route('dashboard') }}" class="flex items-center gap-2 text-gray-500 hover:text-white transition-colors group">
+                <svg class="w-5 h-5 group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+                <span class="text-sm font-mono uppercase tracking-widest">Back</span>
+            </a>
+        </div>
         <h1 class="text-lg font-bold">Account Settings</h1>
     </header>
 

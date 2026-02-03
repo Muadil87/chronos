@@ -41,12 +41,12 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
                             <label class="block text-[10px] font-mono text-gray-500 uppercase tracking-widest mb-2">
-                                Time Allocation (Minutes)
+                                Time Goal (Minutes)
                             </label>
                             <div class="relative">
-                                <input type="number" name="duration_minutes" value="{{ old('duration_minutes', $task->duration_minutes) }}" 
+                                <input type="number" name="time_goal" value="{{ old('time_goal', $task->time_goal ?? 25) }}" 
                                     class="w-full bg-black/50 border border-gray-700 rounded-xl px-4 py-3 text-white focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-none transition-all placeholder-gray-700 font-mono"
-                                    placeholder="60">
+                                    placeholder="25">
                                 <div class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-600 text-xs pointer-events-none">MIN</div>
                             </div>
                         </div>

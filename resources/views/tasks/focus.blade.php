@@ -28,6 +28,11 @@
 <body class="bg-black text-white h-screen flex flex-col overflow-y-auto">
 
     <header class="flex justify-between items-center px-8 py-6 border-b border-gray-900 bg-black/50 backdrop-blur z-20 shrink-0">
+        <a href="{{ route('dashboard') }}" onclick="return confirm('Discard progress and go back?')" class="group flex items-center gap-2 text-gray-400 hover:text-red-400 transition-colors text-sm">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            <span>CANCEL</span>
+        </a>
+        
         <div class="flex items-center gap-3">
             <span class="relative flex h-3 w-3">
               <span id="status-dot-ping" class="animate-ping absolute inline-flex h-full w-full rounded-full bg-indigo-400 opacity-75"></span>
@@ -61,7 +66,7 @@
             <div class="flex items-center gap-4 text-sm font-medium text-gray-500">
                 <span>CYCLE</span>
                 <span class="text-white px-3 py-1 bg-gray-800 rounded text-xs font-mono">
-                    <span id="current-cycle">1</span> / <span id="total-cycles">{{ ceil(($task->duration_minutes ?? 60) / 25) }}</span>
+                    <span id="current-cycle">1</span> / <span id="total-cycles">{{ ceil(($task->time_goal ?? 25) / 25) }}</span>
                 </span>
             </div>
         </div>
@@ -94,7 +99,7 @@
         // Settings: standard cycle lengths
         const STANDARD_FOCUS_MINUTES = 25;
         const STANDARD_REST_MINUTES = 5;
-        const TOTAL_FOCUS_MINUTES = <?php echo (int)($task->duration_minutes ?? 60); ?>;
+        const TOTAL_FOCUS_MINUTES = <?php echo (int)($task->time_goal ?? 25); ?>;
         const TASK_ID = <?php echo (int)$task->id; ?>;
 
         const STANDARD_FOCUS_SECONDS = STANDARD_FOCUS_MINUTES * 60;

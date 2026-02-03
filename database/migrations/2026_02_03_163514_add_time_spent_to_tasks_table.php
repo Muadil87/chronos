@@ -9,13 +9,12 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-     public function up()
-                 {
-    Schema::table('tasks', function (Blueprint $table) {
-        // This will store total minutes focused
-        $table->integer('time_spent')->default(0); 
-    });
-     }
+    public function up(): void
+    {
+        Schema::table('tasks', function (Blueprint $table) {
+            $table->integer('time_spent')->default(0);
+        });
+    }
 
     /**
      * Reverse the migrations.
@@ -23,7 +22,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('tasks', function (Blueprint $table) {
-            //
+            $table->dropColumn('time_spent');
         });
     }
 };

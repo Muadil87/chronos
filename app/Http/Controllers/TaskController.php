@@ -29,7 +29,7 @@ class TaskController extends Controller
         $request->user()->tasks()->create([
             'title' => $validated['title'],
             'is_completed' => false,
-            'duration_minutes' => 60, // Default duration
+            'time_goal' => 25,
         ]);
 
         return redirect()->route('dashboard');
@@ -67,7 +67,7 @@ class TaskController extends Controller
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'notes' => 'nullable|string',
-            'duration_minutes' => 'nullable|integer|min:1',
+            'time_goal' => 'nullable|integer|min:1',
             'is_completed' => 'nullable|boolean',
         ]);
 
