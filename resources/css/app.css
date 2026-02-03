@@ -1,0 +1,43 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom theme tweaks for a cooler look */
+@layer utilities {
+	.bg-chronos-gradient {
+		background: linear-gradient(135deg,#0f172a 0%, #0ea5e9 40%, #7c3aed 100%);
+	}
+
+	.glass-card {
+		background: rgba(255,255,255,0.04);
+		border: 1px solid rgba(255,255,255,0.06);
+		backdrop-filter: blur(8px);
+	}
+
+	.glass-card-light {
+		background: rgba(255,255,255,0.7);
+		border: 1px solid rgba(255,255,255,0.6);
+		backdrop-filter: blur(6px);
+	}
+
+	.btn-primary-gradient {
+		background: linear-gradient(90deg,#7c3aed,#06b6d4);
+		color: white;
+	}
+
+	.glass-input {
+		background: rgba(255,255,255,0.03);
+		border: 1px solid rgba(255,255,255,0.06);
+		color: inherit;
+	}
+
+	.accent-outline {
+		box-shadow: 0 6px 18px rgba(99,102,241,0.12);
+	}
+}
+
+/* Small utility for subtle card hover */
+.card-hover:hover {
+	transform: translateY(-4px);
+	transition: transform .18s ease-out;
+}
