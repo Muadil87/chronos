@@ -22,29 +22,35 @@
 </head>
 <body class="bg-black text-white min-h-screen flex flex-col selection:bg-indigo-500 selection:text-white overflow-x-hidden">
 
-    <nav class="w-full py-6 px-8 flex justify-between items-center max-w-7xl mx-auto z-50">
-        <div class="flex items-center gap-4">
-            <img src="{{ asset('logo.png') }}" alt="Chronos Logo" class="w-24 h-24 object-contain">
-            
-            <span class="text-3xl font-bold tracking-tight text-white">Chronos</span>
+   <nav class="w-full py-8 px-10 flex justify-between items-center max-w-7xl mx-auto z-50">
+    <div class="flex items-center gap-5">
+        <img src="{{ asset('logo.png') }}" alt="Chronos Logo" class="w-16 h-16 md:w-20 md:h-20 object-contain hover:scale-105 transition-transform duration-300">
+        
+        <span class="text-4xl md:text-6xl font-extrabold tracking-tight text-white hover:text-indigo-400 transition-colors duration-300">
+            Chronos
+        </span>
+    </div>
+
+    @if (Route::has('login'))
+        <div class="flex items-center gap-8">
+            @auth
+                <a href="{{ url('/dashboard') }}" class="text-lg font-semibold text-gray-300 hover:text-white transition-colors">
+                    Dashboard
+                </a>
+            @else
+                <a href="{{ route('login') }}" class="text-lg md:text-xl font-medium text-gray-300 hover:text-white transition-colors">
+                    Log in
+                </a>
+
+                @if (Route::has('register'))
+                    <a href="{{ route('register') }}" class="bg-white text-black px-8 py-3 rounded-full text-lg md:text-xl font-bold hover:bg-indigo-50 hover:scale-105 transition-all shadow-[0_0_15px_rgba(255,255,255,0.3)]">
+                        Get Started
+                    </a>
+                @endif
+            @endauth
         </div>
-
-        @if (Route::has('login'))
-            <div class="flex items-center gap-6">
-                @auth
-                    <a href="{{ url('/dashboard') }}" class="text-sm font-medium text-gray-300 hover:text-white transition-colors">Dashboard</a>
-                @else
-                    <a href="{{ route('login') }}" class="text-sm font-medium text-gray-300 hover:text-white transition-colors">Log in</a>
-
-                    @if (Route::has('register'))
-                        <a href="{{ route('register') }}" class="bg-white text-black px-5 py-2 rounded-full text-sm font-semibold hover:bg-gray-200 transition-colors">
-                            Get Started
-                        </a>
-                    @endif
-                @endauth
-            </div>
-        @endif
-    </nav>
+    @endif
+</nav>
 
     <main class="flex-grow flex flex-col items-center justify-center relative px-6 text-center z-10">
         
@@ -77,7 +83,7 @@
         </div>
 
         <div class="mt-24 grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto pb-20">
-            <div class="p-6 rounded-2xl bg-gray-900/30 border border-gray-800 backdrop-blur-sm">
+            <div class="p-6 rounded-2xl bg-gray-900/30 border border-gray-800 backdrop-blur-sm hover:bg-gray-900/50 transition-colors">
                 <div class="w-10 h-10 bg-indigo-900/50 rounded-lg flex items-center justify-center mb-4 text-indigo-400">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
                 </div>
@@ -85,7 +91,7 @@
                 <p class="text-sm text-gray-400">Distraction-free timer designed to keep you in the zone for longer stretches.</p>
             </div>
 
-            <div class="p-6 rounded-2xl bg-gray-900/30 border border-gray-800 backdrop-blur-sm">
+            <div class="p-6 rounded-2xl bg-gray-900/30 border border-gray-800 backdrop-blur-sm hover:bg-gray-900/50 transition-colors">
                 <div class="w-10 h-10 bg-emerald-900/50 rounded-lg flex items-center justify-center mb-4 text-emerald-400">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path></svg>
                 </div>
@@ -93,7 +99,7 @@
                 <p class="text-sm text-gray-400">Manage your active protocols and missions with a clean, command-line inspired interface.</p>
             </div>
 
-            <div class="p-6 rounded-2xl bg-gray-900/30 border border-gray-800 backdrop-blur-sm">
+            <div class="p-6 rounded-2xl bg-gray-900/30 border border-gray-800 backdrop-blur-sm hover:bg-gray-900/50 transition-colors">
                 <div class="w-10 h-10 bg-amber-900/50 rounded-lg flex items-center justify-center mb-4 text-amber-400">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
                 </div>
@@ -101,9 +107,141 @@
                 <p class="text-sm text-gray-400">Visualize your productivity patterns and understand how you spend your time.</p>
             </div>
         </div>
+
+        <section class="w-full py-20 px-6 border-t border-gray-900 bg-gradient-to-b from-black to-gray-950">
+            <div class="max-w-6xl mx-auto">
+                <h2 class="text-4xl md:text-5xl font-bold text-center mb-16">How does it work?</h2>
+                
+                <div class="grid md:grid-cols-2 gap-12 items-center">
+                    <div class="space-y-6 text-left">
+                        <p class="text-lg text-gray-300 leading-relaxed">
+                            Chronos works like a flow state engine designed for deep work. Enter focused sessions, track your progress in real-time, and build momentum without distractions.
+                        </p>
+                        <p class="text-lg text-gray-300 leading-relaxed">
+                            Based on proven productivity methodologies, you can keep focused by:
+                        </p>
+                        <ul class="space-y-3 text-gray-300">
+                            <li class="flex items-start gap-3">
+                                <span class="text-indigo-400 font-bold mt-1">▸</span>
+                                <span>Setting clear time-blocked work sessions</span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <span class="text-indigo-400 font-bold mt-1">▸</span>
+                                <span>Tracking active tasks and time invested</span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <span class="text-indigo-400 font-bold mt-1">▸</span>
+                                <span>Visualizing your focus patterns over time</span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <span class="text-indigo-400 font-bold mt-1">▸</span>
+                                <span>Taking strategic breaks to maintain peak performance</span>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <div class="flex justify-center">
+                        <img src="{{ asset('image1.png') }}" alt="Flow State" class="w-full max-w-sm h-auto object-contain drop-shadow-2xl">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="w-full py-20 px-6 bg-gradient-to-b from-gray-950 to-black">
+            <div class="max-w-6xl mx-auto">
+                <h2 class="text-4xl md:text-5xl font-bold text-center mb-16">Who uses Chronos?</h2>
+                
+                <div class="grid md:grid-cols-2 gap-12 items-center">
+                    <div class="flex justify-center order-2 md:order-1">
+                        <img src="{{ asset('image2.png') }}" alt="Chronos Users" class="w-full max-w-sm h-auto object-contain drop-shadow-2xl">
+                    </div>
+                    
+                    <div class="space-y-6 order-1 md:order-2 text-left">
+                        <p class="text-lg text-gray-300 leading-relaxed">
+                            Chronos is built for anyone who wants to reclaim their time and attention. If you struggle with distractions and procrastination, this is your system.
+                        </p>
+                        
+                        <div class="space-y-4">
+                            <div class="flex items-start gap-3">
+                                <span class="text-emerald-400 font-bold text-xl">✓</span>
+                                <div>
+                                    <h4 class="text-white font-semibold">Software Engineers & Developers</h4>
+                                    <p class="text-gray-400 text-sm">Deep focus sessions for complex problem-solving</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start gap-3">
+                                <span class="text-emerald-400 font-bold text-xl">✓</span>
+                                <div>
+                                    <h4 class="text-white font-semibold">Students & Academics</h4>
+                                    <p class="text-gray-400 text-sm">Master your study schedule and retention</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start gap-3">
+                                <span class="text-emerald-400 font-bold text-xl">✓</span>
+                                <div>
+                                    <h4 class="text-white font-semibold">Content Creators</h4>
+                                    <p class="text-gray-400 text-sm">Maintain creative momentum and output</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start gap-3">
+                                <span class="text-emerald-400 font-bold text-xl">✓</span>
+                                <div>
+                                    <h4 class="text-white font-semibold">Professionals in Demanding Roles</h4>
+                                    <p class="text-gray-400 text-sm">Stay productive and manage burnout effectively</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <p class="text-gray-400 italic pt-4">If you find yourself easily distracted and procrastinating, Chronos might be your antidote.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+       <section class="w-full py-20 px-6 border-t border-gray-900 bg-gradient-to-b from-black to-indigo-950/20">
+            <div class="max-w-6xl mx-auto">
+                <h2 class="text-4xl md:text-5xl font-bold text-center mb-16">The science behind flow state</h2>
+                
+                <div class="grid md:grid-cols-2 gap-12 items-center">
+                    <div class="flex justify-center">
+                        <img src="{{ asset('image3.png') }}" alt="Science of Flow" class="w-full max-w-sm h-auto object-contain drop-shadow-2xl hover:scale-105 transition-transform duration-500">
+                    </div>
+                    
+                    <div class="space-y-6 text-left">
+                        <div>
+                            <h4 class="text-xl font-bold text-indigo-400 mb-2">What is Flow State?</h4>
+                            <p class="text-gray-300 leading-relaxed">
+                                Flow state is the ability to concentrate fully on a single task while losing track of time. The deeper your concentration, the easier it becomes to achieve your goals.
+                            </p>
+                        </div>
+
+                        <div>
+                            <h4 class="text-xl font-bold text-cyan-400 mb-2">The Attention Span Window</h4>
+                            <p class="text-gray-300 leading-relaxed">
+                                Studies have shown that our peak focus window lasts approximately 45-90 minutes, followed by a natural decline. Chronos is built around respecting these biological rhythms.
+                            </p>
+                        </div>
+
+                        <div>
+                            <h4 class="text-xl font-bold text-emerald-400 mb-2">The Recovery Effect</h4>
+                            <p class="text-gray-300 leading-relaxed">
+                                It's natural to lose focus and get distracted. But you can regain your flow by taking strategic breaks and resetting your attention. Chronos helps you identify your rhythm.
+                            </p>
+                        </div>
+
+                        <div class="pt-4 p-4 bg-indigo-500/10 border border-indigo-500/20 rounded-lg">
+                            <p class="text-gray-400 text-sm">
+                                <span class="text-indigo-400 font-semibold">Pro tip:</span> Track your flow sessions to discover your personal productivity patterns and optimize your schedule.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
     </main>
 
-    <footer class="border-t border-gray-900 py-8 text-center text-gray-600 text-sm">
+    <footer class="border-t border-gray-900 py-8 text-center text-gray-600 text-sm bg-black">
         <p>&copy; 2026 Chronos Systems. All rights reserved.</p>
     </footer>
 
