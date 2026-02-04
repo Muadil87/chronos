@@ -61,13 +61,10 @@ The Command Center is your distraction-free home base.
 **1. Main Interface:** View your protocols and initialization status.
 <img src="screenshots/dashboard-main.png" width="100%" style="border-radius: 8px; margin-bottom: 20px">
 
-**2. Search & Retrieval:** Quickly find past missions using the global search.
-<img src="screenshots/dashboard-search.png" width="100%" style="border-radius: 8px; margin-bottom: 20px">
-
-**3. Focus Mode Selection:** A streamlined view to jump immediately into action.
+**2. Focus Mode Selection:** A streamlined view to jump immediately into action.
 <img src="screenshots/dashboard-focus-mode.png" width="100%" style="border-radius: 8px; margin-bottom: 20px">
 
-**4. Mission Completion:** Visual feedback when protocols are successfully terminated.
+**3. Mission Completion:** Visual feedback when protocols are successfully terminated.
 <img src="screenshots/dashboard-completed.png" width="100%" style="border-radius: 8px; margin-bottom: 20px">
 
 ---
