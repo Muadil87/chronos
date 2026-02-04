@@ -1,6 +1,8 @@
 <div align="center">
 
-# <img src="public/logo.png" width="45" style="vertical-align: bottom;"> CHRONOS
+<img src="public/logo.png" alt="Chronos Logo" width="200">
+
+# CHRONOS
 ### The Flow State Operating System
 
 [![Laravel](https://img.shields.io/badge/Laravel-10.x-FF2D20?style=for-the-badge&logo=laravel&logoColor=white)](https://laravel.com)
@@ -10,6 +12,10 @@
 
 <br />
 
+<!-- 
+  IMPORTANT: Ensure your folder is named 'screenshots' (lowercase) 
+  and the file is named 'landing-hero.png'.
+-->
 <img src="screenshots/landing-hero.png" alt="Chronos Landing Page" width="100%" style="border-radius: 10px">
 
 <p align="center">
@@ -18,7 +24,6 @@
 </p>
 
 </div>
-
 ---
 
 ## 🧠 The Methodology
