@@ -80,7 +80,6 @@ Set your parameters: Name, Duration, and Intelligence Notes.
 ### Active Deep Work
 The interface clears. Only the objective and the time remain.
 <img src="screenshots/timer-cpp.png" width="100%" style="border-radius: 8px; margin-bottom: 20px">
-<img src="screenshots/timer-java.png" width="100%" style="border-radius: 8px; margin-bottom: 20px">
 
 ---
 
