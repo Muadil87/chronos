@@ -1,6 +1,6 @@
 <div align="center">
 
-# ⏳ CHRONOS
+# <img src="public/logo.png" width="45" style="vertical-align: bottom;"> CHRONOS
 ### The Flow State Operating System
 
 [![Laravel](https://img.shields.io/badge/Laravel-10.x-FF2D20?style=for-the-badge&logo=laravel&logoColor=white)](https://laravel.com)
@@ -137,9 +137,11 @@ Track your data and manage your credentials.
     ```
 
 ---
+
 ## 👨‍💻 Contributors
 
 **Created & Developed by:** Adil El Bahlouli
+
 ---
 
 ## 📄 License
