@@ -137,6 +137,10 @@ Track your data and manage your credentials.
     ```
 
 ---
+## 👨‍💻 Contributors
+
+**Created & Developed by:** Adil El Bahlouli
+---
 
 ## 📄 License
 
